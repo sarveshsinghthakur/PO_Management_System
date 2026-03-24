@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Purchase Order Management System – Create, manage, and track purchase orders with inventory control." />
+    <title>PO Management System | Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+    <!-- ═══ Sidebar ═══ -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-icon">📦</div>
+            <h1>PO<span>Manager</span></h1>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active" data-section="dashboard" id="nav-dashboard">
+                <span class="nav-icon">📊</span> Dashboard
+            </a>
+            <a href="#" class="nav-item" data-section="create-order" id="nav-create-order">
+                <span class="nav-icon">➕</span> Create Order
+            </a>
+            <a href="#" class="nav-item" data-section="orders" id="nav-orders">
+                <span class="nav-icon">📋</span> All Orders
+            </a>
+            <a href="#" class="nav-item" data-section="vendors" id="nav-vendors">
+                <span class="nav-icon">🏢</span> Vendors
+            </a>
+            <a href="#" class="nav-item" data-section="products" id="nav-products">
+                <span class="nav-icon">📦</span> Products
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <p>IV Innovations Pvt Ltd</p>
+        </div>
+    </aside>
+
+    <!-- ═══ Main Content ═══ -->
+    <main class="main-content">
+        <!-- Top Bar -->
+        <header class="topbar">
+            <button class="menu-toggle" id="menu-toggle">☰</button>
+            <h2 id="page-title">Dashboard</h2>
+            <div class="topbar-actions">
+                <span class="clock" id="live-clock"></span>
+            </div>
+        </header>
+
+        <!-- ═══ Dashboard Section ═══ -->
+        <section class="content-section active" id="section-dashboard">
+            <div class="stats-grid">
+                <div class="stat-card stat-orders">
+                    <div class="stat-icon">📋</div>
+                    <div class="stat-info">
+                        <h3 id="stat-total-orders">0</h3>
+                        <p>Total Orders</p>
+                    </div>
+                </div>
+                <div class="stat-card stat-received">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-info">
+                        <h3 id="stat-received">0</h3>
+                        <p>Received</p>
+                    </div>
+                </div>
+                <div class="stat-card stat-pending">
+                    <div class="stat-icon">⏳</div>
+                    <div class="stat-info">
+                        <h3 id="stat-draft">0</h3>
+                        <p>Draft / Pending</p>
+                    </div>
+                </div>
+                <div class="stat-card stat-value">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-info">
+                        <h3 id="stat-total-value">$0</h3>
+                        <p>Total Value</p>
+                    </div>
+                </div>
+            </div>
+            <div class="dashboard-grid">
+                <div class="card recent-orders-card">
+                    <h3>Recent Orders</h3>
+                    <div class="table-wrapper">
+                        <table id="recent-orders-table">
+                            <thead>
+                                <tr>
+                                    <th>Reference</th>
+                                    <th>Vendor</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="card inventory-card">
+                    <h3>Inventory Overview</h3>
+                    <div class="table-wrapper">
+                        <table id="inventory-table">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>SKU</th>
+                                    <th>Stock</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══ Create Order Section ═══ -->
+        <section class="content-section" id="section-create-order">
+            <div class="card form-card">
+                <h3>🛒 Create New Purchase Order</h3>
+                <form id="po-form">
+                    <div class="form-group">
+                        <label for="vendor-select">Select Vendor</label>
+                        <select id="vendor-select" required>
+                            <option value="">— Choose a vendor —</option>
+                        </select>
+                    </div>
+
+                    <div class="line-items-section">
+                        <div class="line-items-header">
+                            <h4>Order Items</h4>
+                            <button type="button" class="btn btn-add-row" id="add-row-btn">+ Add Row</button>
+                        </div>
+                        <div id="line-items-container">
+                            <!-- Dynamic rows go here -->
+                        </div>
+                    </div>
+
+                    <div class="order-summary" id="order-summary" style="display:none;">
+                        <div class="summary-row"><span>Subtotal:</span><span id="summary-subtotal">$0.00</span></div>
+                        <div class="summary-row"><span>Tax (5%):</span><span id="summary-tax">$0.00</span></div>
+                        <div class="summary-row total"><span>Total:</span><span id="summary-total">$0.00</span></div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary" id="submit-order-btn">Create Purchase Order</button>
+                        <button type="reset" class="btn btn-secondary" id="reset-form-btn">Reset</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- ═══ All Orders Section ═══ -->
+        <section class="content-section" id="section-orders">
+            <div class="card">
+                <div class="section-header">
+                    <h3>📋 All Purchase Orders</h3>
+                    <div class="filter-bar">
+                        <input type="text" id="search-orders" placeholder="Search by reference..." class="search-input" />
+                        <select id="filter-status" class="filter-select">
+                            <option value="">All Statuses</option>
+                            <option value="Draft">Draft</option>
+                            <option value="Confirmed">Confirmed</option>
+                            <option value="Received">Received</option>
+                            <option value="Cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="table-wrapper">
+                    <table id="orders-table">
+                        <thead>
+                            <tr>
+                                <th>Reference</th>
+                                <th>Vendor</th>
+                                <th>Items</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══ Vendors Section ═══ -->
+        <section class="content-section" id="section-vendors">
+            <div class="card">
+                <div class="section-header">
+                    <h3>🏢 Vendors</h3>
+                    <button class="btn btn-primary" id="add-vendor-btn">+ Add Vendor</button>
+                </div>
+                <div class="table-wrapper">
+                    <table id="vendors-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Contact</th>
+                                <th>Rating</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- Add Vendor Modal -->
+            <div class="modal-overlay" id="vendor-modal">
+                <div class="modal">
+                    <div class="modal-header">
+                        <h3>Add New Vendor</h3>
+                        <button class="modal-close" id="close-vendor-modal">&times;</button>
+                    </div>
+                    <form id="vendor-form">
+                        <div class="form-group">
+                            <label for="vendor-name">Name</label>
+                            <input type="text" id="vendor-name" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="vendor-contact">Contact</label>
+                            <input type="text" id="vendor-contact" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="vendor-rating">Rating (0-5)</label>
+                            <input type="number" id="vendor-rating" min="0" max="5" step="0.1" value="0" />
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Vendor</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══ Products Section ═══ -->
+        <section class="content-section" id="section-products">
+            <div class="card">
+                <div class="section-header">
+                    <h3>📦 Products</h3>
+                    <button class="btn btn-primary" id="add-product-btn">+ Add Product</button>
+                </div>
+                <div class="table-wrapper">
+                    <table id="products-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>SKU</th>
+                                <th>Unit Price</th>
+                                <th>Stock Level</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- Add Product Modal -->
+            <div class="modal-overlay" id="product-modal">
+                <div class="modal">
+                    <div class="modal-header">
+                        <h3>Add New Product</h3>
+                        <button class="modal-close" id="close-product-modal">&times;</button>
+                    </div>
+                    <form id="product-form">
+                        <div class="form-group">
+                            <label for="product-name">Product Name</label>
+                            <input type="text" id="product-name" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="product-sku">SKU</label>
+                            <input type="text" id="product-sku" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="product-price">Unit Price ($)</label>
+                            <input type="number" id="product-price" min="0" step="0.01" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="product-stock">Stock Level</label>
+                            <input type="number" id="product-stock" min="0" value="0" />
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Product</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══ Order Detail Modal ═══ -->
+        <div class="modal-overlay" id="order-detail-modal">
+            <div class="modal modal-lg">
+                <div class="modal-header">
+                    <h3 id="order-detail-title">Order Details</h3>
+                    <button class="modal-close" id="close-order-modal">&times;</button>
+                </div>
+                <div id="order-detail-content"></div>
+            </div>
+        </div>
+
+        <!-- ═══ Toast Notifications ═══ -->
+        <div class="toast-container" id="toast-container"></div>
+    </main>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
